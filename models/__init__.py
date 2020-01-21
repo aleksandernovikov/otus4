@@ -8,5 +8,4 @@ __all__ = [
     'Post',
     'Tag',
     'PostTags',
-    # 'posts_tags'
 ]

@@ -7,10 +7,3 @@ engine = create_engine(DB_URI, pool_pre_ping=True)
 Session = scoped_session(
     sessionmaker(autocommit=False, autoflush=False, bind=engine),
 )
-
-
-def write_db(*args):
-    session = Session()
-    for model_instance in args:
-        session.add(model_instance)
-    session.commit()
