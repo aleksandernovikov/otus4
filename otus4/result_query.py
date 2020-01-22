@@ -1,14 +1,15 @@
 from sqlalchemy import func
 
-from db_utils import Session
-from models import Post, User, PostTags
+from otus4.db_utils import Session
+from blog.models import Post, PostTags
+from user.models import User
 
 if __name__ == '__main__':
     """
     Выбрать все посты конкретного пользователя с 2-мя любыми тегами. 
     """
     session = Session()
-    username = 'User#1'
+    username = 'Анна'
     tags_count = 2
 
     posts = session.query(

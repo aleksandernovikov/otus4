@@ -1,23 +1,27 @@
 from sqlalchemy import Column, Integer, String, Boolean, Text, ForeignKey, UniqueConstraint
 from sqlalchemy.orm import relationship
 
-from models import User
-from models.base import Base
+from blog.models.base import Base
+from user.models import User
 
 
 class Post(Base):
     __tablename__ = 'posts'
 
+    id = Column(Integer, primary_key=True)
+
     owner_id = Column(Integer, ForeignKey(User.id))
 
     title = Column(String(100), nullable=False)
     text = Column(Text, nullable=False)
-    published = Column(Boolean, default=False)
 
     author = relationship(User, back_populates='posts', lazy='joined')
-    tags = relationship('Tag', secondary='post_tags', back_populates='posts')
+    tags = relationship('Tag', secondary='post_tags', back_populates='posts', lazy='joined')
 
     # unique title+owner_id
     __table_args__ = (
         UniqueConstraint('owner_id', 'title', name='title_owner'),
     )
+
+    def __repr__(self):
+        return f'{__class__}  #{self.id} {self.title}'
