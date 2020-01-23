@@ -3,6 +3,7 @@ import json
 from random import sample
 
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy.orm.exc import NoResultFound
 
 from otus4.db_utils import Session, try_commit
 from blog.models import Post, Tag
@@ -53,14 +54,16 @@ def load_data(filename):
 
 
 def get_or_create(model, **kwargs):
-    object = model(**kwargs)
-    session.add(object)
+    object_default_data = {}
+    if 'default' in kwargs:
+        object_default_data = kwargs.pop('default')
     try:
+        object = session.query(model).filter_by(**kwargs).one()
+    except NoResultFound:
+        object = model(**kwargs, **object_default_data)
+        session.add(object)
         session.flush()
         session.commit()
-    except IntegrityError:
-        session.rollback()
-        object = session.query(model).filter_by(**kwargs).one()
     return object
 
 
@@ -77,5 +80,6 @@ if __name__ == '__main__':
         tags = [get_or_create(Tag, **tag_data) for tag_data in post.get('tags')]
         print(tags)
 
-        post = get_or_create(Post, owner_id=user.id, title=post.get('title'), text=post.get('text'), tags=tags)
+        post = get_or_create(Post, owner_id=user.id, title=post.get('title'), text=post.get('text'),
+                             default={'tags': tags})
         print(post)

@@ -15,8 +15,8 @@ class Post(Base):
     title = Column(String(100), nullable=False)
     text = Column(Text, nullable=False)
 
-    author = relationship(User, back_populates='posts', lazy='joined')
-    tags = relationship('Tag', secondary='post_tags', back_populates='posts', lazy='joined')
+    author = relationship(User, back_populates='posts')
+    tags = relationship('Tag', secondary='post_tags', back_populates='posts')
 
     # unique title+owner_id
     __table_args__ = (
