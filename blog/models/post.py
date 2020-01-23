@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Boolean, Text, ForeignKey, UniqueConstraint
+from sqlalchemy import Column, Integer, String, Text, ForeignKey, UniqueConstraint
 from sqlalchemy.orm import relationship
 
 from blog.models.base import Base
